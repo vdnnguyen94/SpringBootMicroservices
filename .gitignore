@@ -1,0 +1,44 @@
+# Java
+*.class
+*.jar
+*.war
+*.ear
+
+# Maven
+/target/
+/**/target/
+
+# Gradle
+/build/
+/**/build/
+
+# IntelliJ
+.idea/
+*.iml
+*.iws
+out/
+
+# Eclipse
+.classpath
+.project
+.settings/
+bin/
+
+# VS Code
+.vscode/
+
+# Logs
+*.log
+
+# OS Files
+.DS_Store
+Thumbs.db
+
+# Environment files
+.env
+
+
+
+# Node (if React frontend included)
+client/node_modules/
+client/build/
