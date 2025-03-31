@@ -155,6 +155,21 @@ public class ManagerController {
 
         return ResponseEntity.ok(new HotelAssignmentChangeResponse(requiresHotelUpdate));
     }
+    
+    
+    @PostMapping("/hotel")
+    public ResponseEntity<Hotel> createHotel(@Valid @RequestBody Hotel hotel, BindingResult result) {
+        if (result.hasErrors()) {
+            throw new IllegalArgumentException("ERROR INVALID FORMAT: " + result.getAllErrors());
+        }
+
+        if (hotelRepository.existsById(hotel.getHotelId())) {
+            throw new IllegalArgumentException("Hotel with ID " + hotel.getHotelId() + " already exists.");
+        }
+
+        Hotel savedHotel = hotelRepository.save(hotel);
+        return ResponseEntity.status(HttpStatus.CREATED).body(savedHotel);
+    }
 
 
 }

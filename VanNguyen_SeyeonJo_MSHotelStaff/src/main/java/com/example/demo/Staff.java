@@ -38,7 +38,7 @@ public class Staff {
     @Min(1)
     @Max(5)
     @Column(name = "performanceRating")
-    private int performanceRating = 3;
+    private int performanceRating;
 
     @ManyToOne()
     @JoinColumn(name = "hotelId")

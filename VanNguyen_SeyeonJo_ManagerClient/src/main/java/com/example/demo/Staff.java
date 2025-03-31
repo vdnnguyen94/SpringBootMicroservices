@@ -17,7 +17,7 @@ import java.sql.Date;
 //import java.util.Date;
 import java.util.List;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-
+import com.fasterxml.jackson.annotation.JsonBackReference;
 @Entity
 @Table(name = "Staff")
 public class Staff {
@@ -38,7 +38,7 @@ public class Staff {
     @Min(1)
     @Max(5)
     @Column(name = "performanceRating")
-    private int performanceRating = 3;
+    private int performanceRating;
 
     @ManyToOne()
     @JoinColumn(name = "hotelId")
@@ -47,19 +47,21 @@ public class Staff {
 
     public Staff() {}
 
-    public Staff(String staffName, String department, int performanceRating, Hotel hotel) {
+    public Staff(String staffName, String department, Hotel hotel) {
         this.staffName = staffName;
         this.department = department;
-        this.performanceRating = performanceRating;
+        this.performanceRating = 3;
         this.hotel = hotel;
     }
 
-    public Staff(String staffName, String department, int performanceRating) {
+    public Staff(String staffName, String department) {
         this.staffName = staffName;
         this.department = department;
-        this.performanceRating = performanceRating;
+        this.performanceRating = 3;
         this.hotel = null;
     }
+
+    
     // Getters and Setters
     public int getStaffId() {
         return staffId;
