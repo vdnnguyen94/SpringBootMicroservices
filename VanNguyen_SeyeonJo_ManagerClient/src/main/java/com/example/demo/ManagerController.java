@@ -57,8 +57,9 @@ public class ManagerController {
 	    model.addAttribute("hotels", hotels);
 
 	    // Fetch Staff
-	    Staff[] staff = restTemplate.getForObject(apiURI + "/api/staff", Staff[].class);
-	    model.addAttribute("staffList", staff);
+	    //Staff[] staff = restTemplate.getForObject(apiURI + "/api/staff", Staff[].class);
+	    Staff[] staffSorted = restTemplate.getForObject(apiURI + "/api/staffSorted", Staff[].class);
+        model.addAttribute("staffList", staffSorted);
 		return "home";
 		
 	}
