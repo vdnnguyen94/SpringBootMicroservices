@@ -71,8 +71,6 @@ Access the login page at:
 ## 📂 Key Routes
 
 - Eureka dashboard: `http://localhost:3001`
-- Hotel API: `http://localhost:3002/api/hotels`
-- Staff API: `http://localhost:3002/api/staff`
 - Client homepage: `http://localhost:3003`
 - Admin dashboard: `http://localhost:3003/admin/dashboard`
 - Setup users: `http://localhost:3003/setupusers`
@@ -97,4 +95,38 @@ Access the login page at:
 - Thymeleaf is used to display data, handle login/logout, and secure views
 
 ---
+
+## ⚠️ IMPORTANT LOGIC — CHANGE STAFF PERFORMANCE
+
+When updating a staff member’s **performance rating**, the system will check whether the new rating **crosses performance boundaries**:
+
+- **Group A**: `1–3` (lower performance)
+- **Group B**: `4–5` (higher performance)
+
+### 🔁 If the performance rating *crosses groups*, the staff will be **unassigned from their current hotel** automatically.
+
+### ✅ Example:
+
+| Old Rating | New Rating | Hotel Removed | Response JSON                          |
+|------------|------------|----------------|----------------------------------------|
+| 2          | 3          | ❌ No           | `{ "requiresHotelUpdate": false }`     |
+| 2          | 4          | ✅ Yes          | `{ "requiresHotelUpdate": true }`      |
+| 4          | 5          | ❌ No           | `{ "requiresHotelUpdate": false }`     |
+| 4          | 3          | ✅ Yes          | `{ "requiresHotelUpdate": true }`      |
+
+---
+
+## 🏨 ASSIGN HOTEL TO STAFF
+
+To assign a hotel to a staff member, make a **PUT** request to:
+PUT /api/staff/{staffId}/hotel/{hotelId}/assign
+
+✅ This only succeeds if the staff’s performance rating is:
+- Within the range `1–3`, or
+- Within the range `4–5`
+
+❌ It will **fail** if the performance rating is in a transitional or mismatched range.
+
+
+
 

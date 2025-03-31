@@ -8,6 +8,8 @@ import org.springframework.data.repository.query.Param;
 
 
 public interface HotelRepository extends JpaRepository<Hotel, String> {
+	List<Hotel> findByStarRatingLessThanEqual(int rating);
+	List<Hotel> findByStarRatingGreaterThanEqual(int rating);
 
 
 }
