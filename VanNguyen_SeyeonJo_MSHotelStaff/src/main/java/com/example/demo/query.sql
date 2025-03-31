@@ -29,3 +29,12 @@ INSERT INTO Staff (staffName, department, performanceRating, hotelId) VALUES
 
 Select * from Hotel;
 Select * from Staff;
+
+USE HotelDB;
+CREATE TABLE User (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    username VARCHAR(50) NOT NULL UNIQUE,
+    password VARCHAR(255) NOT NULL,
+    fullName VARCHAR(50) NOT NULL,
+    role VARCHAR(50) NOT NULL
+);

@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" 
+      xmlns:th="https://www.thymeleaf.org"
+      xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+<head>
+    <title>Welcome to Hotel Staff Management App</title>
+</head>
+<body>
+    <h2>Welcome to Hotel Staff Management App</h2>
+    <hr>
+
+    <!-- Flash messages -->
+    <div th:if="${successMessage}">
+        <h3 th:text="${successMessage}" style="color: green;"></h3>
+    </div>
+    <div th:if="${errorMessage}">
+        <h3 th:text="${errorMessage}" style="color: red;"></h3>
+    </div>
+
+    <p>Welcome to the system!</p>
+	
+	<div sec:authorize="hasAuthority('Staff')">
+	    <p><strong>You are not authenticated</strong> — please contact the admin.</p>
+	</div>
+	<div sec:authorize="hasAuthority('Admin')">
+	    <p><strong>You are Admin</strong> — you are authenticated with Hotel Staff Management.</p>
+	        <h3>Hotels</h3>
+	    <div th:if="${#lists.isEmpty(hotels)}">
+	        <h3>No Hotels found</h3>
+	    </div>
+	    <ul th:if="${not #lists.isEmpty(hotels)}">
+	        <li th:each="hotel : ${hotels}">
+	            <a th:href="@{/admin/hotel/view/{id}(id=${hotel.hotelId})}"
+	               th:text="${hotel.toString()}"></a>
+	        </li>
+	    </ul>
+	
+	    <h3>Staff Members</h3>
+	    <div th:if="${#lists.isEmpty(staffList)}">
+	        <h3>No Staff found</h3>
+	    </div>
+	    <ul th:if="${not #lists.isEmpty(staffList)}">
+	        <li th:each="staff : ${staffList}">
+	            <a th:href="@{/admin/staff/view/{id}(id=${staff.staffId})}"
+	               th:text="${staff.toString()}"></a>
+	        </li>
+	    </ul>
+	    
+	</div>
+
+
+
+    <hr>
+    <div sec:authorize="!isAuthenticated()">
+    <a th:href="@{/login}">Login</a>
+	</div>
+	<div sec:authorize="isAuthenticated()">
+    <form th:action="@{/logout}" method="post">
+        <input type="submit" value="Sign Out"/>
+    </form>
+    </div>
+</body>
+</html>

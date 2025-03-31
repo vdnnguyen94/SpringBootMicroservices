@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html  xmlns:th="https://www.thymeleaf.org"
+      xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+<head>
+	<title>MyCustom Login Page</title>
+	<style>
+		.failed {
+			color: red;
+		}
+	</style>	
+</head>
+<body>
+<h3>My Custom Login Page</h3>
+        <div th:if="${param.error}">
+            Invalid username/password.
+        </div>
+        <div th:if="${param.logout}">
+            You have been logged out.
+        </div>
+        <form th:action="@{/login}" role="form" method="post">
+            <div><label> User Name : <input type="text" name="username"/> </label></div>
+            <div><label> Password: <input type="password" name="password"/> </label></div>
+            <div><input type="submit" value="Sign In"/></div>
+        </form>
+    </body>
+</html>
