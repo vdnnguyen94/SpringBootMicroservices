@@ -4,6 +4,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -21,6 +22,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import jakarta.validation.Valid;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api")
@@ -48,4 +50,14 @@ public class ManagerController {
     public List<Staff> listStaff() {
         return staffRepository.findAll();
     }
+    
+    @PostMapping("/staff")
+    public ResponseEntity<Staff> createStaff(@RequestBody Staff staff) {
+        staff.setHotel(null); // Make sure hotel is not assigned
+        Staff saved = staffRepository.save(staff);
+        return ResponseEntity.status(HttpStatus.CREATED).body(saved);
+    }
+
+    
+
 }

@@ -16,8 +16,8 @@ import jakarta.validation.constraints.NotNull;
 import java.sql.Date;
 //import java.util.Date;
 import java.util.List;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 @Entity
 @Table(name = "Staff")
 public class Staff {
@@ -42,7 +42,7 @@ public class Staff {
 
     @ManyToOne()
     @JoinColumn(name = "hotelId")
-    @JsonBackReference
+    @JsonIgnoreProperties("staffList")
     private Hotel hotel;
 
     public Staff() {}
