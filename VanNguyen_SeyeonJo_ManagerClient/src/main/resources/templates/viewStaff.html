@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org">
+<head>
+    <title>View Staff</title>
+</head>
+<body>
+    <h2>View Staff</h2>
+    <hr>
+
+    <div th:if="${staff != null}">
+        <p><strong>Staff ID:</strong> <span th:text="${staff.staffId}"></span></p>
+        <p><strong>Name:</strong> <span th:text="${staff.name}"></span></p>
+        <p><strong>Department:</strong> <span th:text="${staff.department}"></span></p>
+        <p><strong>Performance Rating:</strong> <span th:text="${staff.performanceRating}"></span></p>
+
+        <a th:href="@{/admin/staff/edit/{id}(id=${staff.staffId})}">Edit</a> |
+        <a th:href="@{/admin/staff/delete/{id}(id=${staff.staffId})}">Delete</a>
+    </div>
+</body>
+</html>

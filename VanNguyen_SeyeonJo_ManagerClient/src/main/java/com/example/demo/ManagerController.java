@@ -1,6 +1,5 @@
 package com.example.demo;
 
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.client.ServiceInstance;
 import org.springframework.cloud.client.discovery.DiscoveryClient;
@@ -109,4 +108,56 @@ public class ManagerController {
 
 	    return "dashboard"; 
     } 
+
+    // View individual Hotel details
+    @GetMapping("admin/hotel/{hotelId}")
+    public String viewHotel(@PathVariable String hotelId, Model model) {
+        Hotel hotel = restTemplate.getForObject(apiURI + "/api/hotels/{hotelId}", Hotel.class, hotelId);
+        model.addAttribute("hotel", hotel);
+        return "hotelDetails";
+    }
+
+    // View individual Staff details
+    @GetMapping("admin/staff/{staffId}")
+    public String viewStaff(@PathVariable Integer staffId, Model model) {
+        Staff staff = restTemplate.getForObject(apiURI + "/api/staff/{staffId}", Staff.class, staffId);
+        model.addAttribute("staff", staff);
+        return "staffDetails";
+    }
+
+    // Assign hotel to a staff
+    @PostMapping("admin/staff/{staffId}/assignHotel/{hotelId}")
+    public String assignHotelToStaff(@PathVariable Integer staffId, @PathVariable String hotelId, RedirectAttributes redirectAttributes) {
+        try {
+            restTemplate.put(apiURI + "/api/staff/{staffId}/hotel/{hotelId}/assign", null, staffId, hotelId);
+            redirectAttributes.addFlashAttribute("successMessage", "Hotel successfully assigned to staff.");
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("errorMessage", "Failed to assign hotel to staff.");
+        }
+        return "redirect:/admin/dashboard";
+    }
+
+    // Unassign hotel from a staff
+    @PostMapping("admin/staff/{staffId}/unassignHotel")
+    public String unassignHotelFromStaff(@PathVariable Integer staffId, RedirectAttributes redirectAttributes) {
+        try {
+            restTemplate.put(apiURI + "/api/staff/{staffId}/unassign", null, staffId);
+            redirectAttributes.addFlashAttribute("successMessage", "Hotel successfully unassigned from staff.");
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("errorMessage", "Failed to unassign hotel from staff.");
+        }
+        return "redirect:/admin/dashboard";
+    }
+
+    // Update performance of staff (with hotel reassignment if necessary)
+    @PostMapping("admin/staff/{staffId}/updatePerformance")
+    public String updatePerformance(@PathVariable Integer staffId, @RequestParam int newRating, RedirectAttributes redirectAttributes) {
+        try {
+            restTemplate.put(apiURI + "/api/staff/{staffId}/performance?newRating={newRating}", null, staffId, newRating);
+            redirectAttributes.addFlashAttribute("successMessage", "Performance updated successfully.");
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("errorMessage", "Failed to update performance.");
+        }
+        return "redirect:/admin/dashboard";
+    }
 }

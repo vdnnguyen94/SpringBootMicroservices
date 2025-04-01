@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org">
+<head>
+    <title>Create Staff</title>
+</head>
+<body>
+    <h2>Create Staff</h2>
+    <hr>
+    
+    <form th:action="@{/admin/staff/create}" method="post">
+        <label for="name">Name:</label>
+        <input type="text" id="name" name="name" required/><br/>
+
+        <label for="department">Department:</label>
+        <input type="text" id="department" name="department" required/><br/>
+
+        <label for="performanceRating">Performance Rating:</label>
+        <input type="number" id="performanceRating" name="performanceRating" required/><br/>
+
+        <input type="submit" value="Create Staff"/>
+    </form>
+
+    <a href="/admin/staff">Back to Staff List</a>
+</body>
+</html>

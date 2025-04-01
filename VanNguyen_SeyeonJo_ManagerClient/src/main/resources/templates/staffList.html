@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org">
+<head>
+    <title>Staff List</title>
+</head>
+<body>
+    <h2>Staff List</h2>
+    <hr>
+    
+    <div th:if="${successMessage}">
+        <h3 th:text="${successMessage}" style="color: green;"></h3>
+    </div>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Staff ID</th>
+                <th>Staff Name</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr th:each="staff : ${staffList}">
+                <td th:text="${staff.staffId}"></td>
+                <td th:text="${staff.name}"></td>
+                <td>
+                    <a th:href="@{/admin/staff/view/{id}(id=${staff.staffId})}">View</a> |
+                    <a th:href="@{/admin/staff/edit/{id}(id=${staff.staffId})}">Edit</a> |
+                    <a th:href="@{/admin/staff/delete/{id}(id=${staff.staffId})}">Delete</a>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+    <a href="/admin/staff/create">Create New Staff</a>
+</body>
+</html>

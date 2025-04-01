@@ -1,0 +1,226 @@
+@charset "UTF-8";
+
+body {
+    background-color: #f8f9fa;
+    font-family: 'Poppins', sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+}
+
+.welcome-container {
+    background-color: #ffffff;
+    padding: 30px;
+    border-radius: 15px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 700px;
+    text-align: center;
+}
+
+h2 {
+    color: #333333;
+    margin-bottom: 20px;
+    font-size: 26px;
+    font-weight: 600;
+}
+
+hr {
+    border: none;
+    border-top: 1px solid #d1d1d1;
+    margin: 20px 0;
+}
+
+.flash-message {
+    margin-bottom: 20px;
+    padding: 10px;
+    border-radius: 10px;
+}
+
+.flash-message.success {
+    background-color: #dcffec;
+    color: #2e7d32;
+    border: 1px solid #a5d6a7;
+}
+
+.flash-message.error {
+    background-color: #ffe3e3;
+    color: #c62828;
+    border: 1px solid #ef9a9a;
+}
+
+.section-card {
+    background-color: #f9fafb;
+    padding: 20px;
+    border-radius: 10px;
+    margin-bottom: 20px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.section-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+}
+
+.section-title {
+    color: #333333;
+    font-size: 20px;
+    margin-bottom: 15px;
+    font-weight: 500;
+}
+
+ul.hotel-list, ul.staff-list {
+    list-style: none;
+    padding: 0;
+}
+
+ul.hotel-list li, ul.staff-list li {
+    background-color: #ffffff;
+    margin: 5px 0;
+    padding: 10px;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+ul.hotel-list li:hover, ul.staff-list li:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
+}
+
+a {
+    text-decoration: none;
+    color: #6c63ff;
+    font-weight: 500;
+}
+
+a:hover {
+    color: #7e73f7;
+}
+
+.auth-buttons {
+    margin-top: 20px;
+}
+
+.btn-primary {
+    background: linear-gradient(135deg, #6c63ff, #7e73f7);
+    border: none;
+    border-radius: 10px;
+    padding: 10px 20px;
+    font-size: 16px;
+    transition: background 0.3s ease;
+}
+
+.btn-primary:hover {
+    background: linear-gradient(135deg, #7e73f7, #6c63ff);
+}
+
+.btn-danger {
+    background: linear-gradient(135deg, #ff4d4d, #ff6f61);
+    border: none;
+    border-radius: 10px;
+    padding: 10px 20px;
+    font-size: 16px;
+    transition: background 0.3s ease;
+}
+
+.btn-danger:hover {
+    background: linear-gradient(135deg, #ff6f61, #ff4d4d);
+}
+
+.login-container {
+    background: linear-gradient(135deg, #ffffff, #f9f9f9);
+    padding: 40px;
+    border-radius: 20px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 450px;
+    text-align: center;
+    overflow: hidden;
+    position: relative;
+}
+
+.login-container::before {
+    content: '';
+    position: absolute;
+    top: -50px;
+    right: -50px;
+    width: 200px;
+    height: 200px;
+    background: rgba(255, 255, 255, 0.1);
+    transform: rotate(45deg);
+    z-index: -1;
+}
+
+.login-container h3 {
+    color: #333333;
+    margin-bottom: 25px;
+    font-size: 28px;
+    font-weight: 600;
+    letter-spacing: 1px;
+}
+
+.form-control {
+    border: none;
+    border-bottom: 2px solid #d1d1d1;
+    border-radius: 0;
+    padding: 15px;
+    margin-bottom: 20px;
+    font-size: 16px;
+    transition: border-color 0.3s ease;
+}
+
+.form-control:focus {
+    border-color: #6c63ff;
+    outline: none;
+    box-shadow: none;
+}
+
+.btn-login {
+    background: linear-gradient(135deg, #6c63ff, #7e73f7);
+    border: none;
+    border-radius: 10px;
+    padding: 12px 25px;
+    font-size: 18px;
+    color: white;
+    cursor: pointer;
+    transition: background 0.3s ease;
+    width: 100%;
+}
+
+.btn-login:hover {
+    background: linear-gradient(135deg, #7e73f7, #6c63ff);
+}
+
+.message {
+    margin-top: 15px;
+    font-size: 14px;
+    font-weight: 500;
+}
+
+.failed {
+    color: #ff4d4d;
+}
+
+.success {
+    color: #4caf50;
+}
+
+/* Animation */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.login-container {
+    animation: fadeIn 0.8s ease-in-out;
+}
