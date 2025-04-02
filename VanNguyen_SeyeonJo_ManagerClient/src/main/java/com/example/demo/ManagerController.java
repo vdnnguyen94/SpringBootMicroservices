@@ -230,7 +230,7 @@ public class ManagerController {
     public String assignHotelToStaff(@PathVariable Integer staffId, @RequestParam String hotelId, RedirectAttributes redirectAttributes) {
         String url = apiURI + "/api/staff/" + staffId + "/hotel/" + hotelId + "/assign"; 
         System.out.println("Requesting URL : " + url);
-        System.out.println("apiURI 값: " + apiURI);
+        System.out.println("apiURI: " + apiURI);
 
         try {
             HttpHeaders headers = new HttpHeaders();
