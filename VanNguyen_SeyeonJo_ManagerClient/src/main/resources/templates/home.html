@@ -4,196 +4,124 @@
       xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
 <head>
     <title>Welcome to Hotel Staff Management App</title>
-
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
-    <style>
-        body {
-            background-color: #f8f9fa;
-            font-family: 'Poppins', sans-serif;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            margin: 0;
-        }
-
-        .welcome-container {
-            background-color: #ffffff;
-            padding: 30px;
-            border-radius: 15px;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-            width: 100%;
-            max-width: 700px;
-            text-align: center;
-        }
-
-        h2 {
-            color: #333333;
-            margin-bottom: 20px;
-            font-size: 26px;
-            font-weight: 600;
-        }
-
-        hr {
-            border: none;
-            border-top: 1px solid #d1d1d1;
-            margin: 20px 0;
-        }
-
-        .flash-message {
-            margin-bottom: 20px;
-            padding: 10px;
-            border-radius: 10px;
-        }
-
-        .flash-message.success {
-            background-color: #dcffec;
-            color: #2e7d32;
-            border: 1px solid #a5d6a7;
-        }
-
-        .flash-message.error {
-            background-color: #ffe3e3;
-            color: #c62828;
-            border: 1px solid #ef9a9a;
-        }
-
-        .section-card {
-            background-color: #f9fafb;
-            padding: 20px;
-            border-radius: 10px;
-            margin-bottom: 20px;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-        }
-
-        .section-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-        }
-
-        .section-title {
-            color: #333333;
-            font-size: 20px;
-            margin-bottom: 15px;
-            font-weight: 500;
-        }
-
-        ul.hotel-list, ul.staff-list {
-            list-style: none;
-            padding: 0;
-        }
-
-        ul.hotel-list li, ul.staff-list li {
-            background-color: #ffffff;
-            margin: 5px 0;
-            padding: 10px;
-            border-radius: 8px;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-        }
-
-        ul.hotel-list li:hover, ul.staff-list li:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
-        }
-
-        a {
-            text-decoration: none;
-            color: #6c63ff;
-            font-weight: 500;
-        }
-
-        a:hover {
-            color: #7e73f7;
-        }
-
-        .auth-buttons {
-            margin-top: 20px;
-        }
-
-        .btn-primary {
-            background: linear-gradient(135deg, #6c63ff, #7e73f7);
-            border: none;
-            border-radius: 10px;
-            padding: 10px 20px;
-            font-size: 16px;
-            transition: background 0.3s ease;
-        }
-
-        .btn-primary:hover {
-            background: linear-gradient(135deg, #7e73f7, #6c63ff);
-        }
-
-        .btn-danger {
-            background: linear-gradient(135deg, #ff4d4d, #ff6f61);
-            border: none;
-            border-radius: 10px;
-            padding: 10px 20px;
-            font-size: 16px;
-            transition: background 0.3s ease;
-        }
-
-        .btn-danger:hover {
-            background: linear-gradient(135deg, #ff6f61, #ff4d4d);
-        }
-    </style>
+    <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">    
+    <link rel="stylesheet" href="/css/home-styles.css">
 </head>
 <body>
-    <div class="welcome-container">
-        <h2>Welcome to Hotel Staff Management App</h2>
-        <hr>
-
-        <!-- Flash messages -->
-        <div th:if="${successMessage}" class="flash-message success">
-            <h3 th:text="${successMessage}"></h3>
-        </div>
-        <div th:if="${errorMessage}" class="flash-message error">
-            <h3 th:text="${errorMessage}"></h3>
-        </div>
-
-        <p class="text-center">Welcome to the system!</p>
-
-        <div sec:authorize="hasAuthority('Staff')" class="alert alert-warning text-center">
-            <p><strong>You are not authenticated</strong> — please contact the admin.</p>
-        </div>
-        <div sec:authorize="hasAuthority('Admin')">
-            <!-- Hotels Section -->
-            <div class="section-card">
-                <h3 class="section-title">Hotels</h3>
-                <div th:if="${#lists.isEmpty(hotels)}">
-                    <p>No hotels found. Please add a hotel.</p>
+    <div class="container py-5">
+        <div class="app-container">
+            <!-- Header with icon -->
+            <div class="header-container">
+                <div class="app-icon">
+                    <i class="fas fa-hotel"></i>
                 </div>
-                <ul th:if="${not #lists.isEmpty(hotels)}" class="hotel-list">
-                    <li th:each="hotel : ${hotels}">
-                        <a th:href="@{/admin/hotel/{id}(id=${hotel.hotelId})}" th:text="${hotel.toString()}"></a>
-                    </li>
-                </ul>
+                <h2 class="app-title text-center">Hotel Staff Management</h2>
             </div>
-
-            <!-- Staff Members Section -->
-            <div class="section-card">
-                <h3 class="section-title">Staff Members</h3>
-                <div th:if="${#lists.isEmpty(staffList)}">
-                    <p>No staff members found. Please add a staff member.</p>
+            
+            <div class="content-wrapper">
+                <!-- Flash messages -->
+                <div th:if="${successMessage}" class="alert alert-success alert-cute mb-4">
+                    <i class="fas fa-check-circle me-2"></i>
+                    <span th:text="${successMessage}"></span>
                 </div>
-                <ul th:if="${not #lists.isEmpty(staffList)}" class="staff-list">
-                    <li th:each="staff : ${staffList}">
-                        <a th:href="@{/admin/staff/{id}(id=${staff.staffId})}" th:text="${staff.toString()}"></a>
-                    </li>
-                </ul>
-            </div>
-        </div>
+                <div th:if="${errorMessage}" class="alert alert-danger alert-cute mb-4">
+                    <i class="fas fa-exclamation-circle me-2"></i>
+                    <span th:text="${errorMessage}"></span>
+                </div>
 
-        <hr>
-        <div sec:authorize="!isAuthenticated()" class="auth-buttons">
-            <a th:href="@{/login}" class="btn btn-primary">Login</a>
-        </div>
-        <div sec:authorize="isAuthenticated()" class="auth-buttons">
-            <form th:action="@{/logout}" method="post">
-                <input type="submit" value="Sign Out" class="btn btn-danger"/>
-            </form>
+                <p class="welcome-text text-center mb-4">Welcome to your hotel management system!</p>
+
+                <div sec:authorize="hasAuthority('Staff')" class="alert alert-warning alert-cute text-center mb-4">
+                    <i class="fas fa-user-lock me-2"></i>
+                    <strong>You are not authenticated</strong> — please contact the admin.
+                </div>
+                
+                <div sec:authorize="hasAuthority('Admin')" class="admin-section">
+                    <!-- Hotels Section -->
+                    <div class="section-card mb-4">
+                        <div class="section-header">
+                            <i class="fas fa-building me-2"></i>
+                            <h3 class="section-title">Hotels</h3>
+                        </div>
+                        
+                        <div class="section-content">
+                            <div th:if="${#lists.isEmpty(hotels)}" class="empty-state">
+                                <div class="empty-icon">
+                                    <i class="fas fa-hotel"></i>
+                                </div>
+                                <p>No hotels found. Please add a hotel.</p>
+                            </div>
+                            
+                            <ul th:if="${not #lists.isEmpty(hotels)}" class="item-list hotel-list">
+                                <li th:each="hotel : ${hotels}" class="item-card">
+                                    <a th:href="@{/admin/hotel/{id}(id=${hotel.hotelId})}" class="item-link">
+                                        <div class="item-icon">
+                                            <i class="fas fa-building"></i>
+                                        </div>
+                                        <span th:text="${hotel.toString()}" class="item-name"></span>
+                                        <i class="fas fa-chevron-right item-arrow"></i>
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- Staff Members Section -->
+                    <div class="section-card">
+                        <div class="section-header">
+                            <i class="fas fa-users me-2"></i>
+                            <h3 class="section-title">Staff Members</h3>
+                        </div>
+                        
+                        <div class="section-content">
+                            <div th:if="${#lists.isEmpty(staffList)}" class="empty-state">
+                                <div class="empty-icon">
+                                    <i class="fas fa-user-tie"></i>
+                                </div>
+                                <p>No staff members found. Please add a staff member.</p>
+                            </div>
+                            
+                            <ul th:if="${not #lists.isEmpty(staffList)}" class="item-list staff-list">
+                                <li th:each="staff : ${staffList}" class="item-card">
+                                    <a th:href="@{/admin/staff/{id}(id=${staff.staffId})}" class="item-link">
+                                        <div class="item-icon staff-icon">
+                                            <i class="fas fa-user-tie"></i>
+                                        </div>
+                                        <span th:text="${staff.toString()}" class="item-name"></span>
+                                        <i class="fas fa-chevron-right item-arrow"></i>
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Authentication Buttons -->
+                <div class="auth-section mt-4">
+                    <div sec:authorize="!isAuthenticated()" class="auth-buttons text-center">
+                        <a th:href="@{/login}" class="btn btn-login">
+                            <i class="fas fa-sign-in-alt me-2"></i>Login
+                        </a>
+                    </div>
+                    <div sec:authorize="isAuthenticated()" class="auth-buttons text-center">
+                        <form th:action="@{/logout}" method="post">
+                            <button type="submit" class="btn btn-logout">
+                                <i class="fas fa-sign-out-alt me-2"></i>Sign Out
+                            </button>
+                        </form>
+                    </div>
+                </div>
+                
+                <!-- Footer -->
+                <div class="footer text-center mt-4">
+                    <p>© 2025 Hotel Staff Management</p>
+                </div>
+            </div>
         </div>
     </div>
 

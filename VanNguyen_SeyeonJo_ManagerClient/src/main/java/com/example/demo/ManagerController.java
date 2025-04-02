@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -28,23 +29,23 @@ import jakarta.validation.Valid;
 
 import java.net.URI;
 import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.List;
 
 @Controller
 public class ManagerController {
+	
     @Autowired
     private PasswordEncoder passwordEncoder;
     @Autowired
     private RestTemplate restTemplate;
-	
     @Autowired
-    private UserRepository userRepository;
-    
+    private UserRepository userRepository;    
 	@Autowired
-	DiscoveryClient discoveryClient;
-	
+	DiscoveryClient discoveryClient;	
     private URI apiURI;
 
+    // Initializes the URI of the external service instance on application startup
     @PostConstruct
     public void init() {
         List<ServiceInstance> instances = discoveryClient.getInstances("VanNguyen_SeyeonJo_MSHotelStaff");
@@ -54,6 +55,8 @@ public class ManagerController {
             throw new RuntimeException("VanNguyen_SeyeonJo_MSHotelStaff is not available.");
         }
     }
+    
+    // Displays the home page with a list of hotels and staff
 	@GetMapping("/")
 	public String home(Model model)
 	{
@@ -64,10 +67,10 @@ public class ManagerController {
 	    //Staff[] staff = restTemplate.getForObject(apiURI + "/api/staff", Staff[].class);
 	    Staff[] staffSorted = restTemplate.getForObject(apiURI + "/api/staffSorted", Staff[].class);
         model.addAttribute("staffList", staffSorted);
-		return "home";
-		
+		return "home";		
 	}
-    
+
+    // Creates default admin and staff accounts if they don't already exist
     @GetMapping("/setupusers")
     public String createDefaultUsers(RedirectAttributes redirectAttributes) {
 
@@ -94,14 +97,16 @@ public class ManagerController {
 
         return "redirect:/";
     }
-    
+     
+    // Returns the login page
 	@GetMapping("/login")
 	public String loginGET()
 	{
 		return "login";
 	}
 	
-	@RequestMapping("/admin/dashboard")
+    // Displays the admin dashboard with a list of hotels and staff
+	@RequestMapping("/")
     public String show(Model model)
     {
 	    Hotel[] hotels = restTemplate.getForObject(apiURI + "/api/hotels", Hotel[].class);
@@ -112,59 +117,55 @@ public class ManagerController {
 	    Staff[] staff = restTemplate.getForObject(apiURI + "/api/staffSorted", Staff[].class);
 	    model.addAttribute("staffList", staff);
 
-	    return "dashboard"; 
+	    return "home"; 
     } 
 
-    // View individual Hotel details
-    @GetMapping("admin/hotel/{hotelId}")
-    public String viewHotel(@PathVariable String hotelId, Model model) {
-        Hotel hotel = restTemplate.getForObject(apiURI + "/api/hotels/{hotelId}", Hotel.class, hotelId);
-        model.addAttribute("hotel", hotel);
-        return "hotelDetails";
-    }
+    // Retrieves and displays details of a specific hotel
+	@GetMapping("/admin/hotel/{hotelId}")
+	public String viewHotel(@PathVariable String hotelId, Model model) {
+	    String url = apiURI + "/api/hotels/" + hotelId; 
+	    ResponseEntity<Hotel> response = restTemplate.getForEntity(url, Hotel.class);
 
-    // View individual Staff details
-    @GetMapping("admin/staff/{staffId}")
-    public String viewStaff(@PathVariable Integer staffId, Model model) {
-        Staff staff = restTemplate.getForObject(apiURI + "/api/staff/{staffId}", Staff.class, staffId);
-        model.addAttribute("staff", staff);
-        return "staffDetails";
+	    if (response.getStatusCode().is2xxSuccessful() && response.getBody() != null) {
+	        model.addAttribute("hotel", response.getBody());
+	        return "hotelDetails";
+	    } else {
+	        model.addAttribute("error", "Hotel not found");
+	        return "errorPage"; 
+	    }
+	}
+
+    // Retrieves and displays details of a specific staff member
+	@GetMapping("admin/staff/{staffId}")
+	public String viewStaff(@PathVariable Integer staffId, Model model) {
+	    Staff staff = restTemplate.getForObject(apiURI + "/api/staff/{staffId}", Staff.class, staffId);
+	    model.addAttribute("staff", staff);
+	    
+	    List<Hotel> hotels = Arrays.asList(
+	        restTemplate.getForObject(apiURI + "/api/hotels", Hotel[].class)
+	    );
+	    model.addAttribute("hotels", hotels);
+
+	    return "staffDetails";
+	}
+	
+    // Deletes a staff member and redirects with a success message
+    @PostMapping("/staff/delete/{staffId}")
+    public String deleteStaffViaPost(@PathVariable Integer staffId, RedirectAttributes redirectAttributes) {
+        restTemplate.delete(apiURI + "/api/staff/" + staffId);
+        redirectAttributes.addFlashAttribute("successMessage", "Staff deleted successfully.");
+        return "redirect:/";
     }
     
-    // View individual Staff details
+    // Returns the performance review form for a staff member
     @GetMapping("admin/staff/edit/{staffId}")
     public String staffPerformanceForm(@PathVariable Integer staffId, Model model) {
         Staff staff = restTemplate.getForObject(apiURI + "/api/staff/{staffId}", Staff.class, staffId);
         model.addAttribute("staff", staff);
-        return "editStaff";
+        return "performanceReview";
     }
-
     
-    // Assign hotel to a staff
-    @PostMapping("admin/staff/{staffId}/assignHotel/{hotelId}")
-    public String assignHotelToStaff(@PathVariable Integer staffId, @PathVariable String hotelId, RedirectAttributes redirectAttributes) {
-        try {
-            restTemplate.put(apiURI + "/api/staff/{staffId}/hotel/{hotelId}/assign", null, staffId, hotelId);
-            redirectAttributes.addFlashAttribute("successMessage", "Hotel successfully assigned to staff.");
-        } catch (Exception e) {
-            redirectAttributes.addFlashAttribute("errorMessage", "Failed to assign hotel to staff.");
-        }
-        return "redirect:/admin/dashboard";
-    }
-
-    // Unassign hotel from a staff
-    @PostMapping("admin/staff/{staffId}/unassignHotel")
-    public String unassignHotelFromStaff(@PathVariable Integer staffId, RedirectAttributes redirectAttributes) {
-        try {
-            restTemplate.put(apiURI + "/api/staff/{staffId}/unassign", null, staffId);
-            redirectAttributes.addFlashAttribute("successMessage", "Hotel successfully unassigned from staff.");
-        } catch (Exception e) {
-            redirectAttributes.addFlashAttribute("errorMessage", "Failed to unassign hotel from staff.");
-        }
-        return "redirect:/admin/dashboard";
-    }
-
-    // Update performance of staff (with hotel reassignment if necessary)
+    // Updates the performance rating of a staff member and handles hotel reassignment if needed
     @PostMapping("admin/staff/{staffId}/updatePerformance")
     public String updatePerformance(@PathVariable Integer staffId, @RequestParam int newRating, RedirectAttributes redirectAttributes) {
         if (newRating < 1 || newRating > 5) {
@@ -204,4 +205,40 @@ public class ManagerController {
 
         return "redirect:/admin/staff/" + staffId;
     }
+    
+    // Returns the performance review form for a staff member
+    @GetMapping("admin/staff/assign/{staffId}")
+    public String showAssignForm(@PathVariable Integer staffId, Model model) {
+        Staff staff = restTemplate.getForObject(apiURI + "/api/staff/{staffId}", Staff.class, staffId);
+        model.addAttribute("staff", staff);
+        return "assignHotel";
+    }
+    
+    // Assigns a hotel to a staff member
+    @PostMapping("admin/staff/{staffId}/assignHotel")
+    public String assignHotelToStaff(@RequestParam Integer staffId, @RequestParam String hotelId, Model model) {
+        String url = apiURI + "/staff/" + staffId + "/hotel/" + hotelId + "/assign";
+
+        try {
+            ResponseEntity<String> response = restTemplate.getForEntity(url, String.class);
+            model.addAttribute("message", response.getBody());
+        } catch (Exception e) {
+            model.addAttribute("message", "Error: " + e.getMessage());
+        }
+
+        return "redirect:/admin/staff/" + staffId;
+    }
+
+    // Unassigns a hotel from a staff member
+    @PostMapping("admin/staff/{staffId}/unassignHotel")
+    public String unassignHotelFromStaff(@PathVariable Integer staffId, RedirectAttributes redirectAttributes) {
+        try {
+            restTemplate.put(apiURI + "/api/staff/{staffId}/unassign", null, staffId);
+            redirectAttributes.addFlashAttribute("successMessage", "Hotel successfully unassigned from staff.");
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("errorMessage", "Failed to unassign hotel from staff.");
+        }
+        return "redirect:/admin/dashboard";
+    }
+
 }

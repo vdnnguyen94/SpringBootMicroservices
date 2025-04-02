@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org">
+<head>
+    <title>Performance Review</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">    
+    <link rel="stylesheet" href="/css/home-styles.css">
+</head>
+<body>
+    <div class="container py-5">
+        <div class="app-container">
+            <div class="header-container">
+                <div class="app-icon">
+                    <i class="fas fa-user-check"></i>
+                </div>
+                <h2 class="app-title text-center">Performance Review</h2>
+            </div>
+            
+            <div class="content-wrapper">
+                <div class="section-card">
+                    <p><strong>Staff ID:</strong> <span th:text="${staff.staffId}"></span></p>
+                    <p><strong>Name:</strong> <span th:text="${staff.staffName}"></span></p>
+                    <p><strong>Department:</strong> <span th:text="${staff.department}"></span></p>
+                    <div>
+                        <strong>Hotel:</strong>
+                        <span th:if="${staff.hotel == null}" class="text-danger">No Job Assigned to Staff</span>
+                        <span th:if="${staff.hotel != null}" th:text="${staff.hotel}"></span>
+                    </div>
+                </div>
+                
+                <div class="section-card">
+                    <form th:action="@{/admin/staff/{id}/updatePerformance(id=${staff.staffId})}" method="post">
+                        <label for="performanceRating" class="form-label">Performance Rating (1-5):</label>
+                        <input type="number" id="performanceRating" class="form-control" min="1" max="5" name="newRating" th:value="${staff.performanceRating}" required/>
+                        <div class="mt-3 text-center">
+                            <input type="submit" class="btn btn-primary" value="Update"/>
+                        </div>
+                    </form>
+                </div>
+                
+                <div th:if="${successMessage}" class="alert alert-success text-center mt-3">
+                    <h3 th:text="${successMessage}"></h3>
+                </div>
+                <div th:if="${errorMessage}" class="alert alert-danger text-center mt-3">
+                    <h3 th:text="${errorMessage}"></h3>
+                </div>
+                
+                <div class="back-section text-center mt-3">
+                    <a th:href="@{/admin/staff/{id}(id=${staff.staffId})}" class="btn btn-back">
+                        <i class="fas fa-arrow-left me-2"></i>Back to Staff Details
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

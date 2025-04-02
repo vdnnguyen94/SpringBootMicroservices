@@ -25,6 +25,9 @@ public class WebSecurityConfig {
             .requestMatchers(new AntPathRequestMatcher("/")).permitAll()
             .requestMatchers(new AntPathRequestMatcher("/setupusers")).permitAll() 
             .requestMatchers(new AntPathRequestMatcher("/admin/**")).hasAuthority("Admin")
+            .requestMatchers(new AntPathRequestMatcher("/css/**")).permitAll()
+            .requestMatchers(new AntPathRequestMatcher("/js/**")).permitAll()
+            .requestMatchers(new AntPathRequestMatcher("/images/**")).permitAll()
 			.anyRequest().authenticated()
 		)
 		.formLogin((form) -> form

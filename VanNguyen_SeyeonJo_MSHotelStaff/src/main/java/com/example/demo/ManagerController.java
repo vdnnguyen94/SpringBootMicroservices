@@ -47,6 +47,15 @@ public class ManagerController {
         return hotelRepository.findAll();
     }
     
+    @GetMapping("/hotels/{hotelId}")
+    public ResponseEntity<Hotel> getHotelById(@PathVariable String hotelId) {
+        Hotel hotel = hotelRepository.findById(hotelId)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Hotel not found"));
+
+        return ResponseEntity.ok(hotel);
+    }
+
+    
     @GetMapping("/hotels/lowrate")
     public ResponseEntity<List<Hotel>> getLowRatedHotels() {
         List<Hotel> hotels = hotelRepository.findByStarRatingLessThanEqual(3);
@@ -63,6 +72,7 @@ public class ManagerController {
     public List<Staff> listStaff() {
         return staffRepository.findAll();
     }
+    
     // staffs by Department
     @GetMapping("/staffSorted")
     public ResponseEntity<List<Staff>> getStaffSortedSimple() {
@@ -72,9 +82,10 @@ public class ManagerController {
 
     @PostMapping("/staff")
     public ResponseEntity<Staff> createStaff(@RequestBody Staff staff) {
-        Staff saved = staffRepository.save(staff);
-        return ResponseEntity.status(HttpStatus.CREATED).body(saved);
+        Staff savedStaff = staffRepository.save(staff);
+        return ResponseEntity.status(HttpStatus.CREATED).body(savedStaff);
     }
+    
     @GetMapping("/staff/{staffId}")
     public ResponseEntity<Staff> getStaffById(@PathVariable Integer staffId) {
         Staff staff = staffRepository.findById(staffId)
@@ -82,6 +93,7 @@ public class ManagerController {
 
         return ResponseEntity.ok(staff); 
     }
+    
     @DeleteMapping("/staff/{staffId}")
     public ResponseEntity<Staff> deleteStaff(@PathVariable Integer staffId) {
         Staff staff = staffRepository.findById(staffId)

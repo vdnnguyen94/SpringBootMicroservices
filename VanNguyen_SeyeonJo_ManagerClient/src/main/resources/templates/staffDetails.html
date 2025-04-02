@@ -2,36 +2,82 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org">
 <head>
     <title>View Staff</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="/css/home-styles.css">
 </head>
 <body>
-    <h2>View Staff</h2>
-    <hr>
+    <div class="container py-5">
+        <div class="app-container">
+            <!-- Header with icon -->
+            <div class="header-container">
+                <div class="app-icon">
+                    <i class="fas fa-user"></i>
+                </div>
+                <h2 class="app-title text-center">Staff Details</h2>
+            </div>
+            
+            <div class="content-wrapper">
+                <div th:if="${staff != null}" class="section-card">
+                    <div class="detail-row">
+                        <div class="detail-label"><i class="fas fa-id-badge me-2"></i>Staff ID</div>
+                        <div class="detail-value" th:text="${staff.staffId}"></div>
+                    </div>
+                    <div class="detail-row">
+                        <div class="detail-label"><i class="fas fa-user me-2"></i>Name</div>
+                        <div class="detail-value" th:text="${staff.staffName}"></div>
+                    </div>
+                    <div class="detail-row">
+                        <div class="detail-label"><i class="fas fa-briefcase me-2"></i>Department</div>
+                        <div class="detail-value" th:text="${staff.department}"></div>
+                    </div>
+                    <div class="detail-row">
+                        <div class="detail-label"><i class="fas fa-chart-line me-2"></i>Performance Rating</div>
+                        <div class="detail-value" th:text="${staff.performanceRating}"></div>
+                    </div>
+                    <div class="detail-row">
+                        <div class="detail-label"><i class="fas fa-hotel me-2"></i>Hotel</div>
+                        <div class="detail-value text-danger" th:if="${staff.hotel == null}">No Job Assigned to Staff</div>
+                        <div class="detail-value" th:if="${staff.hotel != null}" th:text="${staff.hotel.hotelName}"></div>
+                    </div>
+                </div>
 
-    <div th:if="${staff != null}">
-        <p><strong>Staff ID:</strong> <span th:text="${staff.staffId}"></span></p>
-        <p><strong>Name:</strong> <span th:text="${staff.staffName}"></span>
-        <p><strong>Department:</strong> <span th:text="${staff.department}"></span></p>
-        <p><strong>Performance Rating:</strong> <span th:text="${staff.performanceRating}"></span></p>
-        
-         <div>
-	        <strong>Hotel:</strong>
-	        <span th:if="${staff.hotel == null}" style="color:red;">
-	            No Job Assigned to Staff
-	        </span>
-	        <span th:if="${staff.hotel != null}">
-	            <span th:text="${staff.hotel}"></span>
-        </span>
-    	</div>
-        <!-- Flash messages -->
-        <div th:if="${successMessage}" class="flash-message success">
-            <h3 th:text="${successMessage}"></h3>
+                <!-- Flash Messages -->
+                <div th:if="${successMessage}" class="alert alert-success text-center" th:text="${successMessage}"></div>
+                <div th:if="${errorMessage}" class="alert alert-danger text-center" th:text="${errorMessage}"></div>
+
+				<!-- Action Buttons -->
+				<div class="d-grid gap-3 mt-4">
+				    <div class="d-flex justify-content-center gap-3 w-100">
+				        <a th:href="@{/admin/staff/edit/{id}(id=${staff.staffId})}" class="btn btn-edit w-100">
+				            <i class="fas fa-pencil-alt me-2"></i>Edit Performance
+				        </a>
+				        <a th:href="@{/admin/staff/assign/{id}(id=${staff.staffId})}" class="btn btn-assign w-100">
+				            <i class="fas fa-hotel me-2"></i>Assign Hotel
+				        </a>
+				        <form th:action="@{/staff/delete/{id}(id=${staff.staffId})}" method="post" class="w-100">
+				            <input type="hidden" name="_method" value="DELETE"/>
+				            <button type="submit" class="btn btn-delete w-100" onclick="return confirm('Are you sure you want to delete this staff member?')">
+				                <i class="fas fa-trash-alt me-2"></i>Delete
+				            </button>
+				        </form>
+				    </div>
+				</div>
+
+                <!-- Back Button -->
+                <div class="back-section mt-4">
+                    <a th:href="@{/}" class="btn btn-back">
+                        <i class="fas fa-arrow-left me-2"></i>Back to Dashboard
+                    </a>
+                </div>
+            </div>
         </div>
-        <div th:if="${errorMessage}" class="flash-message error">
-            <h3 th:text="${errorMessage}"></h3>
-        </div>
-        
-        <a th:href="@{/admin/staff/edit/{id}(id=${staff.staffId})}">Performance Review</a> |
-        <a th:href="@{/admin/staff/delete/{id}(id=${staff.staffId})}">Delete</a>
     </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
