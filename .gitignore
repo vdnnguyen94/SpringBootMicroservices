@@ -42,3 +42,4 @@ Thumbs.db
 # Node (if React frontend included)
 client/node_modules/
 client/build/
+/.metadata/

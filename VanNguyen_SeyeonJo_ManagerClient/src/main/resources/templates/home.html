@@ -35,7 +35,7 @@
                 </div>
                 <ul th:if="${not #lists.isEmpty(hotels)}" class="hotel-list">
                     <li th:each="hotel : ${hotels}">
-                        <a th:href="@{/admin/hotel/view/{id}(id=${hotel.hotelId})}" th:text="${hotel.toString()}"></a>
+                        <a th:href="@{/admin/hotel/{id}(id=${hotel.hotelId})}" th:text="${hotel.toString()}"></a>
                     </li>
                 </ul>
             </div>
@@ -48,7 +48,7 @@
                 </div>
                 <ul th:if="${not #lists.isEmpty(staffList)}" class="staff-list">
                     <li th:each="staff : ${staffList}">
-                        <a th:href="@{/admin/staff/view/{id}(id=${staff.staffId})}" th:text="${staff.toString()}"></a>
+                        <a th:href="@{/admin/staff/{id}(id=${staff.staffId})}" th:text="${staff.toString()}"></a>
                     </li>
                 </ul>
             </div>
