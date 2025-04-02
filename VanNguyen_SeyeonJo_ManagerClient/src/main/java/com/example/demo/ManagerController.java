@@ -226,20 +226,32 @@ public class ManagerController {
     }
     
     // Assigns a hotel to a staff member
-    @PostMapping("admin/staff/{staffId}/assignHotel")
-    public String assignHotelToStaff(@PathVariable Integer staffId, @RequestParam String hotelId, RedirectAttributes redirectAttributes) {
-        String url = apiURI + "/api/staff/" + staffId + "/hotel/" + hotelId + "/assign"; 
-        System.out.println("Requesting URL : " + url);
-        System.out.println("apiURI: " + apiURI);
-
+    @GetMapping("admin/staff/{staffId}/assignHotel")
+    public String assignHotelToStaff(@PathVariable Integer staffId, 
+                                     @RequestParam String hotelId, 
+                                     RedirectAttributes redirectAttributes) {
         try {
-            HttpHeaders headers = new HttpHeaders();
-            headers.setContentType(MediaType.APPLICATION_JSON);
-            HttpEntity<Void> requestEntity = new HttpEntity<>(headers);
+            ResponseEntity<Staff> staffResponse = restTemplate.getForEntity(apiURI + "/api/staff/" + staffId, Staff.class);
+            Staff staff = staffResponse.getBody();
+            
+            ResponseEntity<Hotel> hotelResponse = restTemplate.getForEntity(apiURI + "/api/hotel/" + hotelId, Hotel.class);
+            Hotel hotel = hotelResponse.getBody();
 
-            ResponseEntity<String> response = restTemplate.exchange(url, HttpMethod.POST, requestEntity, String.class);
+            int staffRating = staff.getPerformanceRating();
+            int hotelRating = hotel.getStarRating();
 
+            boolean bothLow = staffRating >= 1 && staffRating <= 3 && hotelRating >= 1 && hotelRating <= 3;
+            boolean bothHigh = staffRating >= 4 && staffRating <= 5 && hotelRating >= 4 && hotelRating <= 5;
+
+            if (!(bothLow || bothHigh)) {
+                redirectAttributes.addFlashAttribute("errorMessage", "ERROR: MISMATCH PERFORMANCE");
+                return "redirect:/admin/staff/" + staffId;
+            }
+
+            String url = apiURI + "/api/staff/" + staffId + "/hotel/" + hotelId + "/assign"; 
+            ResponseEntity<String> response = restTemplate.getForEntity(url, String.class);
             redirectAttributes.addFlashAttribute("successMessage", response.getBody());
+
         } catch (Exception e) {
             redirectAttributes.addFlashAttribute("errorMessage", "Error: " + e.getMessage());
         }

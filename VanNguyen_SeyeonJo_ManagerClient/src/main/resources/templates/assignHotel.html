@@ -37,10 +37,14 @@
 				        <label for="hotelSelection" class="form-label">Assign Hotel:</label>
 				        <select id="hotelSelection" class="form-select" name="hotelId" required>
 						    <option value="" disabled selected>Select a hotel</option>
-							<option th:each="hotel : ${hotels}" 
-							        th:value="${hotel.hotelId}" 
-							        th:text="${hotel.hotelId + ' - ' + hotel.hotelName}">
-							</option>
+						    <option th:each="hotel : ${hotels}" 
+						            th:if="(${staff.performanceRating} >= 4 AND ${staff.performanceRating} <= 5 AND 
+						                    ${hotel.starRating} >= 4 AND ${hotel.starRating} <= 5) OR
+						                   (${staff.performanceRating} >= 1 AND ${staff.performanceRating} <= 3 AND 
+						                    ${hotel.starRating} >= 1 AND ${hotel.starRating} <= 3)"
+						            th:value="${hotel.hotelId}" 
+						            th:text="${hotel.hotelId + ' - ' + hotel.hotelName}">
+						    </option>
 						</select>
 						
 						<div th:if="${#lists.isEmpty(hotels)}" class="text-danger mt-2">
