@@ -119,7 +119,7 @@ public class ManagerController {
     }
 
     // View individual Staff details
-    @GetMapping("admin/staff/view/{staffId}")
+    @GetMapping("admin/staff/{staffId}")
     public String viewStaff(@PathVariable Integer staffId, Model model) {
         Staff staff = restTemplate.getForObject(apiURI + "/api/staff/{staffId}", Staff.class, staffId);
         model.addAttribute("staff", staff);
