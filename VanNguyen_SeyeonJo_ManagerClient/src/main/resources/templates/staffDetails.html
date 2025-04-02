@@ -12,6 +12,16 @@
         <p><strong>Name:</strong> <span th:text="${staff.staffName}"></span>
         <p><strong>Department:</strong> <span th:text="${staff.department}"></span></p>
         <p><strong>Performance Rating:</strong> <span th:text="${staff.performanceRating}"></span></p>
+        
+         <div>
+	        <strong>Hotel:</strong>
+	        <span th:if="${staff.hotel == null}" style="color:red;">
+	            No Job Assigned to Staff
+	        </span>
+	        <span th:if="${staff.hotel != null}">
+	            <span th:text="${staff.hotel}"></span>
+        </span>
+    	</div>
 
         <a th:href="@{/admin/staff/edit/{id}(id=${staff.staffId})}">Edit</a> |
         <a th:href="@{/admin/staff/delete/{id}(id=${staff.staffId})}">Delete</a>
