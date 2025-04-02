@@ -37,10 +37,10 @@
 				        <label for="hotelSelection" class="form-label">Assign Hotel:</label>
 				        <select id="hotelSelection" class="form-select" name="hotelId" required>
 						    <option value="" disabled selected>Select a hotel</option>
-						    <option th:each="hotel : ${hotels}" 
-						            th:value="${hotel.hotelName}" 
-						            th:text="${hotel.hotelName}">
-						    </option>
+							<option th:each="hotel : ${hotels}" 
+							        th:value="${hotel.hotelId}" 
+							        th:text="${hotel.hotelId + ' - ' + hotel.hotelName}">
+							</option>
 						</select>
 						
 						<div th:if="${#lists.isEmpty(hotels)}" class="text-danger mt-2">

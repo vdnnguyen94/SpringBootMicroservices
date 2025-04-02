@@ -23,6 +23,7 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.core.ParameterizedTypeReference;
 
 import jakarta.annotation.PostConstruct;
 import jakarta.validation.Valid;
@@ -210,25 +211,42 @@ public class ManagerController {
     @GetMapping("admin/staff/assign/{staffId}")
     public String showAssignForm(@PathVariable Integer staffId, Model model) {
         Staff staff = restTemplate.getForObject(apiURI + "/api/staff/{staffId}", Staff.class, staffId);
+        
+        List<Hotel> hotels = restTemplate.exchange(
+            apiURI + "/api/hotels",
+            HttpMethod.GET,
+            null,
+            new ParameterizedTypeReference<List<Hotel>>() {}
+        ).getBody();
+
         model.addAttribute("staff", staff);
+        model.addAttribute("hotels", hotels); 
+
         return "assignHotel";
     }
     
     // Assigns a hotel to a staff member
     @PostMapping("admin/staff/{staffId}/assignHotel")
-    public String assignHotelToStaff(@RequestParam Integer staffId, @RequestParam String hotelId, Model model) {
-        String url = apiURI + "/staff/" + staffId + "/hotel/" + hotelId + "/assign";
+    public String assignHotelToStaff(@PathVariable Integer staffId, @RequestParam String hotelId, RedirectAttributes redirectAttributes) {
+        String url = apiURI + "/api/staff/" + staffId + "/hotel/" + hotelId + "/assign"; 
+        System.out.println("Requesting URL : " + url);
+        System.out.println("apiURI 값: " + apiURI);
 
         try {
-            ResponseEntity<String> response = restTemplate.getForEntity(url, String.class);
-            model.addAttribute("message", response.getBody());
+            HttpHeaders headers = new HttpHeaders();
+            headers.setContentType(MediaType.APPLICATION_JSON);
+            HttpEntity<Void> requestEntity = new HttpEntity<>(headers);
+
+            ResponseEntity<String> response = restTemplate.exchange(url, HttpMethod.POST, requestEntity, String.class);
+
+            redirectAttributes.addFlashAttribute("successMessage", response.getBody());
         } catch (Exception e) {
-            model.addAttribute("message", "Error: " + e.getMessage());
+            redirectAttributes.addFlashAttribute("errorMessage", "Error: " + e.getMessage());
         }
 
         return "redirect:/admin/staff/" + staffId;
     }
-
+    
     // Unassigns a hotel from a staff member
     @PostMapping("admin/staff/{staffId}/unassignHotel")
     public String unassignHotelFromStaff(@PathVariable Integer staffId, RedirectAttributes redirectAttributes) {
