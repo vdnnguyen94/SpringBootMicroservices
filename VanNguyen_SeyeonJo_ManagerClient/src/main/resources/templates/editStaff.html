@@ -1,25 +1,38 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org">
 <head>
-    <title>Edit Staff</title>
+    <title>Performance review</title>
 </head>
 <body>
-    <h2>Edit Staff</h2>
+    <h2>Performance review </h2>
     <hr>
 
-    <form th:action="@{/admin/staff/edit/{id}(id=${staff.staffId})}" method="post">
-        <label for="name">Name:</label>
-        <input type="text" id="name" name="name" th:value="${staff.name}" required/><br/>
+    <form th:action="@{/admin/staff/{id}/updatePerformance(id=${staff.staffId})}" method="post">
+        <p><strong>Staff ID:</strong> <span th:text="${staff.staffId}"></span></p>
+        <p><strong>Name:</strong> <span th:text="${staff.staffName}"></span>
+        <p><strong>Department:</strong> <span th:text="${staff.department}"></span></p>
+         <div>
+	        <strong>Hotel:</strong>
+	        <span th:if="${staff.hotel == null}" style="color:red;">
+	            No Job Assigned to Staff
+	        </span>
+	        <span th:if="${staff.hotel != null}">
+	            <span th:text="${staff.hotel}"></span>
+        </span>
+    	</div>
+        <label for="performanceRating">Performance Rating (1-5):</label>
+        <input type="number" id="performanceRating" min="1" max="5" name="newRating" th:value="${staff.performanceRating}" required/><br/>
 
-        <label for="department">Department:</label>
-        <input type="text" id="department" name="department" th:value="${staff.department}" required/><br/>
-
-        <label for="performanceRating">Performance Rating:</label>
-        <input type="number" id="performanceRating" name="performanceRating" th:value="${staff.performanceRating}" required/><br/>
-
-        <input type="submit" value="Update Staff"/>
+        <input type="submit" value="Update"/>
+        
     </form>
-
+    <!-- Flash messages -->
+    <div th:if="${successMessage}" class="flash-message success">
+		<h3 th:text="${successMessage}"></h3>
+	</div>
+	<div th:if="${errorMessage}" class="flash-message error">
+		<h3 th:text="${errorMessage}"></h3>
+	</div>
     <a href="/admin/staff">Back to Staff List</a>
 </body>
 </html>

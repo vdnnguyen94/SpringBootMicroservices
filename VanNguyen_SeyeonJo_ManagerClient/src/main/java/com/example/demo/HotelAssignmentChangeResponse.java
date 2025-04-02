@@ -3,6 +3,7 @@ package com.example.demo;
 public class HotelAssignmentChangeResponse {
     private boolean requiresHotelUpdate;
 
+    public HotelAssignmentChangeResponse() {}
     public HotelAssignmentChangeResponse(boolean requiresHotelUpdate) {
         this.requiresHotelUpdate = requiresHotelUpdate;
     }

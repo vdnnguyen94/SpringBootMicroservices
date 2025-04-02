@@ -22,8 +22,15 @@
 	            <span th:text="${staff.hotel}"></span>
         </span>
     	</div>
-
-        <a th:href="@{/admin/staff/edit/{id}(id=${staff.staffId})}">Edit</a> |
+        <!-- Flash messages -->
+        <div th:if="${successMessage}" class="flash-message success">
+            <h3 th:text="${successMessage}"></h3>
+        </div>
+        <div th:if="${errorMessage}" class="flash-message error">
+            <h3 th:text="${errorMessage}"></h3>
+        </div>
+        
+        <a th:href="@{/admin/staff/edit/{id}(id=${staff.staffId})}">Performance Review</a> |
         <a th:href="@{/admin/staff/delete/{id}(id=${staff.staffId})}">Delete</a>
     </div>
 </body>

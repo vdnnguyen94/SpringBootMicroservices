@@ -17,6 +17,11 @@ import org.springframework.web.client.RestTemplate;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 
 import jakarta.annotation.PostConstruct;
 import jakarta.validation.Valid;
@@ -125,7 +130,16 @@ public class ManagerController {
         model.addAttribute("staff", staff);
         return "staffDetails";
     }
+    
+    // View individual Staff details
+    @GetMapping("admin/staff/edit/{staffId}")
+    public String staffPerformanceForm(@PathVariable Integer staffId, Model model) {
+        Staff staff = restTemplate.getForObject(apiURI + "/api/staff/{staffId}", Staff.class, staffId);
+        model.addAttribute("staff", staff);
+        return "editStaff";
+    }
 
+    
     // Assign hotel to a staff
     @PostMapping("admin/staff/{staffId}/assignHotel/{hotelId}")
     public String assignHotelToStaff(@PathVariable Integer staffId, @PathVariable String hotelId, RedirectAttributes redirectAttributes) {
@@ -153,12 +167,41 @@ public class ManagerController {
     // Update performance of staff (with hotel reassignment if necessary)
     @PostMapping("admin/staff/{staffId}/updatePerformance")
     public String updatePerformance(@PathVariable Integer staffId, @RequestParam int newRating, RedirectAttributes redirectAttributes) {
+        if (newRating < 1 || newRating > 5) {
+            redirectAttributes.addFlashAttribute("errorMessage", "Invalid performance rating. Must be between 1 and 5.");
+            return "redirect:/admin/staff/edit/" + staffId;
+        }
+        
         try {
-            restTemplate.put(apiURI + "/api/staff/{staffId}/performance?newRating={newRating}", null, staffId, newRating);
-            redirectAttributes.addFlashAttribute("successMessage", "Performance updated successfully.");
+        	
+            // Send request to update performance
+            HttpHeaders headers = new HttpHeaders();
+            headers.setContentType(MediaType.APPLICATION_JSON);
+            HttpEntity<Void> requestEntity = new HttpEntity<>(headers);
+            
+            ResponseEntity<HotelAssignmentChangeResponse> responseEntity =
+                    restTemplate.exchange(
+                        apiURI + "/api/staff/" + staffId + "/performance?newRating=" + newRating,
+                        HttpMethod.PUT,
+                        requestEntity,
+                        HotelAssignmentChangeResponse.class
+                    );
+            HotelAssignmentChangeResponse response = responseEntity.getBody();
+            System.out.println("RESPONSE requiresHotelUpdate: " + response.isRequiresHotelUpdate());
+
+
+            if (response != null && response.isRequiresHotelUpdate()) {
+                redirectAttributes.addFlashAttribute("successMessage",
+                    "Performance successfully updated. Hotel has been removed from staff due to mismatch. Please assign hotel according to new rating.");
+            } else {
+                redirectAttributes.addFlashAttribute("successMessage",
+                    "Performance successfully updated. No change in hotel assignment.");
+            }
         } catch (Exception e) {
             redirectAttributes.addFlashAttribute("errorMessage", "Failed to update performance.");
+            return "redirect:/admin/staff/edit/" + staffId;
         }
-        return "redirect:/admin/dashboard";
+
+        return "redirect:/admin/staff/" + staffId;
     }
 }
