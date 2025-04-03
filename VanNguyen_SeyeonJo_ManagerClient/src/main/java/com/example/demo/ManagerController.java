@@ -57,19 +57,6 @@ public class ManagerController {
         }
     }
     
-    // Displays the home page with a list of hotels and staff
-	@GetMapping("/")
-	public String home(Model model)
-	{
-	    Hotel[] hotels = restTemplate.getForObject(apiURI + "/api/hotels", Hotel[].class);
-	    model.addAttribute("hotels", hotels);
-
-	    // Fetch Staff
-	    //Staff[] staff = restTemplate.getForObject(apiURI + "/api/staff", Staff[].class);
-	    Staff[] staffSorted = restTemplate.getForObject(apiURI + "/api/staffSorted", Staff[].class);
-        model.addAttribute("staffList", staffSorted);
-		return "home";		
-	}
 
     // Creates default admin and staff accounts if they don't already exist
     @GetMapping("/setupusers")
@@ -108,7 +95,7 @@ public class ManagerController {
 	
     // Displays the admin dashboard with a list of hotels and staff
 	@RequestMapping("/")
-    public String show(Model model)
+    public String home(Model model)
     {
 	    Hotel[] hotels = restTemplate.getForObject(apiURI + "/api/hotels", Hotel[].class);
 	    model.addAttribute("hotels", hotels);
@@ -226,15 +213,14 @@ public class ManagerController {
     }
     
     // Assigns a hotel to a staff member
-    @GetMapping("admin/staff/{staffId}/assignHotel")
+    @PostMapping("admin/staff/{staffId}/assignHotel")
     public String assignHotelToStaff(@PathVariable Integer staffId, 
                                      @RequestParam String hotelId, 
                                      RedirectAttributes redirectAttributes) {
         try {
             ResponseEntity<Staff> staffResponse = restTemplate.getForEntity(apiURI + "/api/staff/" + staffId, Staff.class);
             Staff staff = staffResponse.getBody();
-            
-            ResponseEntity<Hotel> hotelResponse = restTemplate.getForEntity(apiURI + "/api/hotel/" + hotelId, Hotel.class);
+            ResponseEntity<Hotel> hotelResponse = restTemplate.getForEntity(apiURI + "/api/hotels/" + hotelId, Hotel.class);
             Hotel hotel = hotelResponse.getBody();
 
             int staffRating = staff.getPerformanceRating();
@@ -249,7 +235,13 @@ public class ManagerController {
             }
 
             String url = apiURI + "/api/staff/" + staffId + "/hotel/" + hotelId + "/assign"; 
-            ResponseEntity<String> response = restTemplate.getForEntity(url, String.class);
+            HttpHeaders headers = new HttpHeaders();
+            headers.setContentType(MediaType.APPLICATION_JSON);
+            HttpEntity<Void> entity = new HttpEntity<>(headers);
+
+            ResponseEntity<String> response = restTemplate.exchange(
+                url, HttpMethod.POST, entity, String.class
+            );
             redirectAttributes.addFlashAttribute("successMessage", response.getBody());
 
         } catch (Exception e) {

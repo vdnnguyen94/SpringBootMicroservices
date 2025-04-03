@@ -126,7 +126,3 @@ PUT /api/staff/{staffId}/hotel/{hotelId}/assign
 - Within the range `4–5`
 
 ❌ It will **fail** if the performance rating is in a transitional or mismatched range.
-
-
-
-

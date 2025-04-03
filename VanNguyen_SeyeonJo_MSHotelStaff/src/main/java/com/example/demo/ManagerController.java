@@ -103,7 +103,7 @@ public class ManagerController {
         return ResponseEntity.ok(staff); 
     }
 
-    @GetMapping("/staff/{staffId}/hotel/{hotelId}/assign")
+    @PostMapping("/staff/{staffId}/hotel/{hotelId}/assign")
     public ResponseEntity<String> assignHotelToStaff(@PathVariable Integer staffId, @PathVariable String hotelId) {
         Staff staff = staffRepository.findById(staffId)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Staff not found"));
