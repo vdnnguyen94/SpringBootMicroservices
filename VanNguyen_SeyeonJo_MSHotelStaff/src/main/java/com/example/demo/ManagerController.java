@@ -169,7 +169,7 @@ public class ManagerController {
     }
     
     
-    @PostMapping("/hotel")
+    @PostMapping("/hotels")
     public ResponseEntity<Hotel> createHotel(@Valid @RequestBody Hotel hotel, BindingResult result) {
         if (result.hasErrors()) {
             throw new IllegalArgumentException("ERROR INVALID FORMAT: " + result.getAllErrors());

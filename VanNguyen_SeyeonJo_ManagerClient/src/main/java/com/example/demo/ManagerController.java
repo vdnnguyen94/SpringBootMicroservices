@@ -262,5 +262,28 @@ public class ManagerController {
         }
         return "redirect:/admin/staff/" + staffId;
     }
+    //new hotel
+    @GetMapping("/admin/newhotel")
+    public String showAddHotelForm(Model model) {
+        model.addAttribute("hotel", new Hotel());
+        return "addHotel";
+    }
+    //post hotel
+    @PostMapping("/admin/newhotel")
+    public String addHotel(@Valid @ModelAttribute("hotel") Hotel hotel, BindingResult result, RedirectAttributes redirectAttributes) {
+        if (result.hasErrors()) {
+            return "addHotel"; 
+        }
 
+        try {
+            ResponseEntity<String> response = restTemplate.postForEntity(apiURI + "/api/hotels", hotel, String.class);
+            redirectAttributes.addFlashAttribute("successMessage", "New Hotel successfully added");
+            return "redirect:/";
+        } catch (Exception e) {
+            result.rejectValue(null, "error.hotel", "Error saving hotel: " + e.getMessage());
+            return "addHotel";
+        }
+    }
+
+    
 }
