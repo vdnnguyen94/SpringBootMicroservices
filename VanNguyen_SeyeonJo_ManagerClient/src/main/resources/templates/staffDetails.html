@@ -60,13 +60,14 @@
 				        <a th:href="@{/admin/staff/assign/{id}(id=${staff.staffId})}" class="btn btn-assign w-100">
 				            <i class="fas fa-hotel me-2"></i>Assign Hotel
 				        </a>
-						<form th:if="${staff.hotel != null}" 
-                        th:action="@{/admin/staff/{id}/unassignHotel(id=${staff.staffId})}" 
-                        method="post" class="btn btn-assign w-100">
-                        <button type="submit" class="btn btn-sm">
-                            <i class="fas fa-trash-alt me-2"></i> Unassign Hotel
-                        </button>
-                  		</form>
+						<a th:if="${staff.hotel != null}" 
+						   th:href="@{/admin/staff/{id}/unassignHotel(id=${staff.staffId})}" 
+						   class="btn btn-unassign w-100"
+						   onclick="event.preventDefault(); document.getElementById('unassign-form').submit();">
+						    <i class="fas fa-trash-alt me-2"></i> Unassign Hotel
+						</a>
+						<form id="unassign-form" th:action="@{/admin/staff/{id}/unassignHotel(id=${staff.staffId})}" method="post" style="display: none;">
+						</form>
 				        <form th:action="@{/staff/delete/{id}(id=${staff.staffId})}" method="post" class="w-100">
 				            <input type="hidden" name="_method" value="DELETE"/>
 				            <button type="submit" class="btn btn-delete w-100" onclick="return confirm('Are you sure you want to delete this staff member?')">

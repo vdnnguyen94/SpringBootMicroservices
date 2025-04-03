@@ -428,7 +428,7 @@ body {
   color: white;
 }
 
-.btn-edit, .btn-delete, .btn-assign {
+.btn-edit, .btn-delete, .btn-assign, .btn-unassign {
   border-radius: 25px;
   padding: 8px 25px;
   font-weight: 500;
@@ -487,3 +487,16 @@ body {
   transform: translateY(-2px);
   color: white;
 }
+
+.btn-unassign {
+  /* background-color: #51cf66; */
+  border: 2px solid #ff9eb5;
+}
+
+.btn-unassign:hover {
+  background-color: #fbc02d;
+  box-shadow: 0 4px 10px rgba(251, 192, 45, 0.3);
+  transform: translateY(-2px);
+  color: white;
+}
+
