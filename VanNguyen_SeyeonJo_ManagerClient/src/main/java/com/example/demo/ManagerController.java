@@ -260,7 +260,7 @@ public class ManagerController {
         } catch (Exception e) {
             redirectAttributes.addFlashAttribute("errorMessage", "Failed to unassign hotel from staff.");
         }
-        return "redirect:/admin/dashboard";
+        return "redirect:/admin/staff/" + staffId;
     }
 
 }
