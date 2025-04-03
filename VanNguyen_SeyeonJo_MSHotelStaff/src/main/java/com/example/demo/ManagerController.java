@@ -82,6 +82,9 @@ public class ManagerController {
 
     @PostMapping("/staff")
     public ResponseEntity<Staff> createStaff(@RequestBody Staff staff) {
+        if (staff.getPerformanceRating() == 0) {
+            staff.setPerformanceRating(3);
+        }
         Staff savedStaff = staffRepository.save(staff);
         return ResponseEntity.status(HttpStatus.CREATED).body(savedStaff);
     }

@@ -280,10 +280,40 @@ public class ManagerController {
             redirectAttributes.addFlashAttribute("successMessage", "New Hotel successfully added");
             return "redirect:/";
         } catch (Exception e) {
-            result.rejectValue(null, "error.hotel", "Error saving hotel: " + e.getMessage());
-            return "addHotel";
+            if (e.getMessage().contains("already exists")) {
+            	redirectAttributes.addFlashAttribute("errorMessage", "Hotel ID already exists.");
+            	return "redirect:/admin/newhotel";
+            } else {
+                redirectAttributes.addFlashAttribute("errorMessage", "Error saving hotel: " + e.getMessage());
+                return "redirect:/admin/newhotel";
+            }
         }
     }
 
+    @GetMapping("/admin/newstaff")
+    public String showAddStaffForm(Model model) {
+        Staff staff = new Staff();
+        staff.setPerformanceRating(3);
+        model.addAttribute("staff", staff);
+        return "addStaff";
+    }
+
+    @PostMapping("/admin/newstaff")
+    public String addStaff(@Valid @ModelAttribute("staff") Staff staff,
+                           BindingResult result,
+                           RedirectAttributes redirectAttributes) {
+        if (result.hasErrors()) {
+            return "addStaff";
+        }
+
+        try {
+            ResponseEntity<String> response = restTemplate.postForEntity(apiURI + "/api/staff", staff, String.class);
+            redirectAttributes.addFlashAttribute("successMessage", "New Staff successfully added");
+            return "redirect:/";
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("errorMessage", "Error saving staff: " + e.getMessage());
+            return "redirect:/admin/newstaff";
+        }
+    }
     
 }
